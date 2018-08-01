@@ -2,10 +2,10 @@
 extern crate dssim;
 extern crate optimal_image;
 
-use std::env;
-use std::path::{Path};
-use optimal_image::dataclients::Png;
 use dssim::*;
+use optimal_image::dataclients::Png;
+use std::env;
+use std::path::Path;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -13,7 +13,9 @@ fn main() {
     let a = &rest_args[0];
     let b = &rest_args[1];
 
-    let png_client = Png { name: "png-dataclient".to_string() };
+    let png_client = Png {
+        name: "png-dataclient".to_string(),
+    };
 
     let mut context = dssim::new();
     let image_a = png_client.load(Path::new(a)).unwrap();
