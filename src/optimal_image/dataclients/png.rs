@@ -11,18 +11,19 @@ use imgref::{ImgVec};
 use dssim::*;
 use dataclients::ImageSpec;
 
-#[derive(Debug)]
 pub struct Png {
-    name: String
+    pub name: String,
 }
 
-impl ImageSpec for Png {
-    fn new(&self, name: String) -> Png {
-        Png{ name }
-    }
-
-    fn load<P: AsRef<Path>>(&self, path: P) -> Result<ImgVec<dssim::RGBAPLU>, io::Error> {
+impl Png {
+    pub fn load<P: AsRef<Path>>(&self, path: P) -> Result<ImgVec<dssim::RGBAPLU>, lodepng::Error> {
         let image = lodepng::decode32_file(path.as_ref())?;
         Ok(imgref::Img::new(image.buffer.to_rgbaplu(), image.width, image.height))
     }
 }
+
+// impl ImageSpec for Png {
+//     fn new(&self, name: String) -> Png {
+//         Png{ name }
+//     }
+// }
