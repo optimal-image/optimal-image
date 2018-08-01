@@ -7,7 +7,7 @@
 ```bash
 cargo run
 ```
-- Now you can verify the tool  by comparing 2 images as below:
+- Now you can verify the tool  by comparing 2 images (source http://www.gaeawiki.com/) as below:
 ```
-./target/optimizer aaa.png bbb.png
+./target/optimal_image data/Iceland_scenery.png data/Iceland_scenery-min.png
 ```
