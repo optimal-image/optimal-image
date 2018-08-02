@@ -11,7 +11,7 @@ lodepng = "2.1.2"
 
 [[bin]]
 name = "optimal_image"
-path = "src/main.rs"
+path = "src/bin/main.rs"
 
 [lib]
 name = "optimal_image"

@@ -1,4 +1,3 @@
-#![feature(extern_prelude)]
 extern crate dssim;
 extern crate optimal_image;
 
