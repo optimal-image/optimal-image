@@ -18,9 +18,6 @@ impl Search {
     fn from_path(&self, path: &Path) -> &Search {
         // TODO: initialize struct members based on path
         self
-
-
-
     }
 }
 
