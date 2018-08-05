@@ -1,8 +1,8 @@
+use dataclients::ImageData;
 use std::path::Path;
 use ImageConfig;
-use ImageScore;
 use ImageFormat;
-use dataclients::{ImageData};
+use ImageScore;
 
 pub struct SearchOptions {
     threshold: f64,
@@ -18,10 +18,16 @@ impl Search {
     fn from_path(&self, path: &Path) -> &Search {
         // TODO: initialize struct members based on path
         self
+
+
+
     }
 }
 
-pub fn find_optimal_config(config: &Vec<ImageConfig>, threshold: f64) -> &ImageConfig {
+pub fn find_optimal_config(
+    config: &Vec<ImageConfig>,
+    threshold: f64,
+) -> &ImageConfig {
     let index = config
         .binary_search_by(|probe| {
             // TODO:
@@ -36,7 +42,10 @@ pub fn find_optimal_config(config: &Vec<ImageConfig>, threshold: f64) -> &ImageC
 }
 
 // rank based on min size with score above threshold
-pub fn rank_image_scores(scores: &Vec<ImageScore>, score_threshold: f64) -> Vec<ImageScore> {
+pub fn rank_image_scores(
+    scores: &Vec<ImageScore>,
+    score_threshold: f64,
+) -> Vec<ImageScore> {
     let mut result = scores
         .iter()
         .cloned()

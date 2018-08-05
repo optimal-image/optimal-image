@@ -1,7 +1,7 @@
 extern crate dssim;
-use std::path::Path;
-use std::error::Error;
 use imgref::ImgVec;
+use std::error::Error;
+use std::path::Path;
 mod png;
 
 pub type ImageData = ImgVec<dssim::RGBAPLU>;
