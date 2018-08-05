@@ -3,6 +3,7 @@ rust:
 - stable
 - nightly
 script:
+- cargo fmt --all -- --check
 - cargo build --verbose
 - cargo test --verbose
 - cargo doc

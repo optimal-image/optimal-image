@@ -1,24 +1,24 @@
-extern crate image;
 extern crate dssim;
+extern crate image;
 extern crate imgref;
 extern crate lodepng;
 
-use std::env;
-use std::io;
-use std::path::{Path};
-use image::{open, ImageResult, DynamicImage};
-use imgref::{ImgVec};
+use dataclients::{ImageDataResult, Loader};
 use dssim::*;
-use dataclients::ImageSpec;
+use std::path::Path;
 
 pub struct Png {
     pub name: String,
 }
 
-impl Png {
-    pub fn load<P: AsRef<Path>>(&self, path: P) -> Result<ImgVec<dssim::RGBAPLU>, lodepng::Error> {
+impl Loader<lodepng::Error> for Png {
+    fn load<P: AsRef<Path>>(&self, path: P) -> ImageDataResult<lodepng::Error> {
         let image = lodepng::decode32_file(path.as_ref())?;
-        Ok(imgref::Img::new(image.buffer.to_rgbaplu(), image.width, image.height))
+        Ok(imgref::Img::new(
+            image.buffer.to_rgbaplu(),
+            image.width,
+            image.height,
+        ))
     }
 }
 
