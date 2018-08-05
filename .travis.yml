@@ -3,6 +3,7 @@ rust:
 - stable
 - nightly
 script:
+- rustup component add rustfmt-preview
 - cargo fmt --all -- --check
 - cargo build --verbose
 - cargo test --verbose
