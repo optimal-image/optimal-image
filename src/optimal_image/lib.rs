@@ -1,5 +1,5 @@
-extern crate image;
 extern crate dssim;
+extern crate image;
 extern crate imgref;
 extern crate lodepng;
 
