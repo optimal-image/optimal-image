@@ -3,6 +3,9 @@ name = "optimal-image"
 version = "0.1.0"
 authors = ["Andrea Moretti <axyzxp@gmail.com>"]
 
+[badges]
+travis-ci = { repository = "https://github.com/axyz/optimal-image", branch = "master" }
+
 [dependencies]
 dssim = "2.9.9"
 image = "0.19.0"
