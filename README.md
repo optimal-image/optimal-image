@@ -1,4 +1,6 @@
 # optimal-image
+[![Build Status](https://travis-ci.com/axyz/optimal-image.svg?branch=master)](https://travis-ci.com/axyz/optimal-image)
+
 
 ## Development
 - For the first time you want to run, you can run the `make init` to intialize the `githooks`
