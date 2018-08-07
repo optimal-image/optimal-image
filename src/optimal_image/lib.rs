@@ -2,6 +2,7 @@ extern crate dssim;
 extern crate image;
 extern crate imgref;
 extern crate lodepng;
+extern crate rgb;
 
 use std::cmp::Ordering;
 

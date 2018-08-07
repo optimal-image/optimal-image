@@ -21,9 +21,3 @@ impl Loader<lodepng::Error> for Png {
         ))
     }
 }
-
-// impl ImageSpec for Png {
-//     fn new(&self, name: String) -> Png {
-//         Png{ name }
-//     }
-// }
