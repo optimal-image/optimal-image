@@ -8,6 +8,7 @@ matrix:
   allow_failures:
     - rust: nightly
     - rust: beta
+  fast_finish: true
 script:
 - rustup component add rustfmt-preview
 - cargo fmt --all -- --check
