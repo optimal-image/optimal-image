@@ -1,16 +1,17 @@
-use std::ffi::{CString, CStr};
+use vips;
 use std::error::Error;
-use std::os::raw::{c_int, c_void, c_char};
-use std::ptr::null;
+use std::ffi::{CStr, CString};
 use std::marker::PhantomData;
+use std::os::raw::{c_char, c_int, c_void};
+use std::ptr::null;
 
-pub struct VipsInstance { }
+pub struct VipsInstance {}
 
 impl VipsInstance {
-    pub fn new(name:&str) -> Result<VipsInstance, Box<Error>> {
+    pub fn new(name: &str) -> Result<VipsInstance, Box<Error>> {
         let c = CString::new(name)?;
         unsafe {
-            ffi::vips_init(c.as_ptr());
+            vips::vips_init(c.as_ptr());
         }
         Ok(VipsInstance {})
     }
@@ -19,8 +20,7 @@ impl VipsInstance {
 impl Drop for VipsInstance {
     fn drop(&mut self) {
         unsafe {
-            ffi::vips_shutdown();
+            vips::vips_shutdown();
         }
     }
 }
-

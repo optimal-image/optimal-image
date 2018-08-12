@@ -34,6 +34,10 @@ impl Loader<ImageError> for Jpeg {
             })
             .collect();
 
-        Ok(imgref::Img::new(buffer, width as usize, height as usize))
+        Ok(imgref::Img::new(
+            buffer,
+            width as usize,
+            height as usize,
+        ))
     }
 }

@@ -1,5 +1,3 @@
-extern crate vips_sys as vips;
-
 mod image;
 mod instance;
 
