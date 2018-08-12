@@ -1,4 +1,4 @@
-
+use compress::vips;
 use std::ffi::{CString, CStr};
 use std::error::Error;
 use std::sync::atomic::AtomicBool;
@@ -7,44 +7,50 @@ use std::ptr::null;
 use std::marker::PhantomData;
 use std::sync::atomic::Ordering::Relaxed;
 
+const NULL_LIST: *const c_char  = null() as *const c_char;
 
+/// VipsImage implements the port of VipsImage class from vips
+///
 pub struct VipsImage<'a> {
-    pub c: *mut ffi::VipsImage,
+    /// `img` represents the `VipsImage` class mentioned here
+    /// http://jcupitt.github.io/libvips/API/current/VipsImage.html
+    pub img: *mut vips::VipsImage,
+    /// `marker`for indicating the lifetime of img as `a`
     marker: PhantomData<&'a()>,
 }
 
 impl<'a> Drop for VipsImage<'a> {
     fn drop(&mut self) {
         unsafe {
-            ffi::g_object_unref(self.c as *mut c_void);
+            vips::g_object_unref(self.img as *mut c_void);
         }
     }
 }
 
 impl<'a> VipsImage<'a> {
-    pub fn new() -> Result<VipsImage<'a>, Box<Error>> {
-        let c = unsafe { ffi::vips_image_new() };
-        result(c)
-    }
-
+    /// `from_file()` creates an instance of `VipsImage` from a given file path
     pub fn from_file<S: Into<Vec<u8>>>(path: S) -> Result<VipsImage<'a>, Box<Error>> {
         let path = CString::new(path)?;
-        let c = unsafe { ffi::vips_image_new_from_file(path.as_ptr(), null() as *const c_char) };
+        let c = unsafe { vips::vips_image_new_from_file(path.as_ptr(), NULL_LIST) };
         result(c)
     }
 
+    /// `write_to_file()` writes an instance of `VipsImage` to a given file path
     pub fn write_to_file<S: Into<Vec<u8>>>(&self, path: S) -> Result<(), Box<Error>> {
         let path = CString::new(path)?;
-        let ret = unsafe { ffi::vips_image_write_to_file(self.c as *mut ffi::VipsImage, path.as_ptr(), null() as *const c_char) };
+        let ret = unsafe { vips::vips_image_write_to_file(self.img as *mut ffi::VipsImage,
+                                                          path.as_ptr(), NULL_LIST) };
         match ret {
             0 => Ok(()),
             _ => Err(current_error().into()),
         }
     }
-    
-    pub fn jpegsave<S: Into<Vec<u8>>>(&mut self, path: S) -> Result<(), Box<Error>> {
+
+    /// `jpegsave()` saves a `jpeg` image with a given `quality` factor
+    pub fn jpegsave<S: Into<Vec<u8>>>(&mut self, path: S, quality: i32) -> Result<(), Box<Error>> {
         let path = CString::new(path)?;
-        let ret = unsafe { ffi::vips_jpegsave(self.c as *mut ffi::VipsImage, path.as_ptr(), null() as *const c_char) };
+        let ret = unsafe { vips::vips_jpegsave(self.img as *mut ffi::VipsImage, path.as_ptr(),
+                                               "Q\0".as_ptr(), quality as i32, NULL_LIST) };
         match ret {
             0 => Ok(()),
             _ => Err(current_error().into()),

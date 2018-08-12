@@ -57,5 +57,6 @@ pub struct ImageScore {
     size: u64,
 }
 
+pub mod compress;
 pub mod dataclients;
 pub mod search;

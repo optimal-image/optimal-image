@@ -1,7 +1,7 @@
-extern crate vips_sys as ffi;
+extern crate vips_sys as vips;
 
 mod image;
 mod instance;
 
-pub use image::VipsImage;
-pub use instance::VipsInstance;
+pub use self::image::VipsImage;
+pub use self::instance::VipsInstance;
