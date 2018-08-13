@@ -1,4 +1,3 @@
-use vips;
 use std::error::Error;
 use std::ffi::{CStr, CString};
 use std::marker::PhantomData;
@@ -6,11 +5,11 @@ use std::os::raw::{c_char, c_int, c_void};
 use std::ptr::null;
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::Relaxed;
+use vips;
 
 const NULL_LIST: *const c_char = null() as *const c_char;
 
 /// VipsImage implements the port of VipsImage class from vips
-///
 pub struct VipsImage<'a> {
     /// `img` represents the `VipsImage` class mentioned here
     /// http://jcupitt.github.io/libvips/API/current/VipsImage.html
@@ -80,11 +79,8 @@ impl<'a> VipsImage<'a> {
     }
 }
 
-
 pub fn current_error() -> String {
-    let msg = unsafe {
-        CStr::from_ptr(vips::vips_error_buffer())
-    };
+    let msg = unsafe { CStr::from_ptr(vips::vips_error_buffer()) };
     msg.to_str().unwrap().to_string()
 }
 
@@ -92,7 +88,9 @@ fn result<'a>(ptr: *mut vips::VipsImage) -> Result<VipsImage<'a>, Box<Error>> {
     if ptr.is_null() {
         Err(current_error().into())
     } else {
-        Ok(VipsImage { img: ptr, marker: PhantomData })
+        Ok(VipsImage {
+            img: ptr,
+            marker: PhantomData,
+        })
     }
 }
-
