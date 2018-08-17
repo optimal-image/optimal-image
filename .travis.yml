@@ -4,6 +4,9 @@ rust:
   - stable
   - beta
 matrix:
+  install:
+    - apt install libvips
+    - cargo build --verbose
   allow_failures:
     - rust: beta
   fast_finish: true
