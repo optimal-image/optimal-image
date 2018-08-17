@@ -1,18 +1,23 @@
+sudo: required
 language: rust
 cache: cargo
 
 before_install:
-  - sudo apt-get install -y libvips pkg-config
+  - ./install-vips.sh
+
+env:
+  global:
+    - VIPS_VERSION=8.6.5
 
 rust:
   - stable
   - beta
   
-  
 matrix:
   allow_failures:
     - rust: beta
   fast_finish: true
+
 script:
 - rustup component add rustfmt-preview
 - cargo fmt --all -- --check
