@@ -1,5 +1,5 @@
 # optimal-image
-[![Build Status](https://travis-ci.com/axyz/optimal-image.svg?branch=master)](https://travis-ci.com/axyz/optimal-image)
+[![Build Status](https://travis-ci.org/optimal-image/optimal-image.svg?branch=master)](https://travis-ci.com/optimal-image/optimal-image)
 
 
 ## Development
