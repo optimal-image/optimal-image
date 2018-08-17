@@ -2,7 +2,7 @@ language: rust
 cache: cargo
 
 before_install:
-  - sudo apt-get install -y libvips
+  - sudo apt-get install -y libvips pkg-config
   - cargo build --verbose
 
 rust:
@@ -11,9 +11,6 @@ rust:
   
   
 matrix:
-  install:
-    - apt install libvips
-    - cargo build --verbose
   allow_failures:
     - rust: beta
   fast_finish: true
