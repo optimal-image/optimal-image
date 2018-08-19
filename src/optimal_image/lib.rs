@@ -41,8 +41,7 @@ pub struct ImageConfig {
 
 impl PartialOrd for ImageConfig {
     fn partial_cmp(&self, other: &ImageConfig) -> Option<Ordering> {
-        self.encoding_config
-            .partial_cmp(&other.encoding_config)
+        self.encoding_config.partial_cmp(&other.encoding_config)
     }
 }
 
