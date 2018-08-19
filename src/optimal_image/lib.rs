@@ -3,6 +3,7 @@ extern crate image;
 extern crate imgref;
 extern crate lodepng;
 extern crate rgb;
+extern crate vips_sys as vips;
 
 use std::cmp::Ordering;
 
@@ -57,5 +58,6 @@ pub struct ImageScore {
     size: u64,
 }
 
+pub mod compress;
 pub mod dataclients;
 pub mod search;
