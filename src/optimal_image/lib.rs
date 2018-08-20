@@ -7,7 +7,7 @@ extern crate vips_sys as vips;
 
 use std::cmp::Ordering;
 
-#[derive(Debug, Clone)]
+#[derive(Eq, PartialEq, Debug, Clone, Hash)]
 pub enum ImageFormat {
     JPEG,
     PNG,
