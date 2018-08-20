@@ -13,7 +13,15 @@ pub struct Jpeg {
     pub name: String,
 }
 
-impl Loader<ImageError> for Jpeg {
+impl Jpeg {
+    pub fn new() -> Jpeg {
+        Jpeg {
+            name: String::from("jpeg-dataclient"),
+        }
+    }
+}
+
+impl Loader for Jpeg {
     fn load<P: AsRef<Path>>(&self, path: P) -> ImageDataResult<ImageError> {
         let image = image::open(path)?;
         let (width, height) = image.dimensions();
