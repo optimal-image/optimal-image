@@ -4,10 +4,11 @@ extern crate rgb;
 use dataclients::ImageData;
 use std::error::Error;
 use std::ffi::{CStr, CString};
-use std::slice;
 use std::marker::PhantomData;
 use std::os::raw::{c_char, c_int, c_void};
 use std::ptr::null;
+use std::slice;
+use std::mem;
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::Relaxed;
 use vips;
@@ -125,17 +126,32 @@ impl<'a> VipsImage<'a> {
     }
 
     pub fn to_image_data(&self) -> Result<ImageData, Box<Error>> {
-        unimplemented!();
-        // let buffer: Vec<u8> = unsafe {
-        //     let len = (*self.img).length;
-        //     let array_ptr = vips::vips_image_write_to_memory(self.img, len as *mut usize);
-        //     let slice = slice::from_raw_parts(array_ptr, len);
-        //     slice.iter().map(|b| b).collect()
-        // };
-        // let width = unsafe { (*self.img).Xsize };
-        // let height = unsafe { (*self.img).Ysize };
+        let vector: Vec<u8> = unsafe {
+            let mut result_size: usize = 0;
+            let memory: *mut u8 = vips::vips_image_write_to_memory(
+                self.img,
+                &mut result_size as *mut usize,
+            ) as *mut u8;
+            let slice = slice::from_raw_parts_mut(memory, result_size);
+            let vec = slice.to_vec();
+            // FIXME: we should free the memory, but it is segfaulting
+            // vips::g_object_unref(memory as *mut c_void);
+            vec
+        };
+
+        // let buffer: ImageData = vector.chunks(4).map(|chunk| {
+        //     chunk.iter().fold(RGBA {}, |pixel, byte| {
+        //         b
+        //     })
+        // }).collect();
+
+
+        let width = unsafe { (*self.img).Xsize };
+        let height = unsafe { (*self.img).Ysize };
 
         // unsafe { println!("{:?}", buffer) };
+
+        unimplemented!();
 
         // Ok(imgref::Img::new(buffer, width as usize, height as usize))
     }
