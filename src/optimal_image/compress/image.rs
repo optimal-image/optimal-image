@@ -1,16 +1,14 @@
 extern crate image;
 extern crate imgref;
 extern crate rgb;
+extern crate libc;
 use dataclients::ImageData;
 use std::error::Error;
 use std::ffi::{CStr, CString};
 use std::marker::PhantomData;
-use std::os::raw::{c_char, c_int, c_void};
+use std::os::raw::{c_char, c_void};
 use std::ptr::null;
 use std::slice;
-use std::mem;
-use std::sync::atomic::AtomicBool;
-use std::sync::atomic::Ordering::Relaxed;
 use vips;
 
 const NULL_LIST: *const c_char = null() as *const c_char;
@@ -134,8 +132,8 @@ impl<'a> VipsImage<'a> {
             ) as *mut u8;
             let slice = slice::from_raw_parts_mut(memory, result_size);
             let vec = slice.to_vec();
-            // FIXME: we should free the memory, but it is segfaulting
-            // vips::g_object_unref(memory as *mut c_void);
+            // manually free the memory
+            libc::free(memory as *mut libc::c_void);
             vec
         };
 
@@ -144,7 +142,6 @@ impl<'a> VipsImage<'a> {
         //         b
         //     })
         // }).collect();
-
 
         let width = unsafe { (*self.img).Xsize };
         let height = unsafe { (*self.img).Ysize };

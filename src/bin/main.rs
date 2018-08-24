@@ -43,7 +43,8 @@ fn main() {
     // println!("{:?}", val);
 
     let img = VipsImage::from_file(Path::new(a).to_str().unwrap()).unwrap();
-    let img2 = VipsImage::from_image_data(&image_a).unwrap();
+    let img2 = VipsImage::from_file(Path::new(b).to_str().unwrap()).unwrap();
+    // let img2 = VipsImage::from_image_data(&image_a).unwrap();
 
     img2.to_image_data();
 
