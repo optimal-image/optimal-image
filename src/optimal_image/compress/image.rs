@@ -1,7 +1,7 @@
 extern crate image;
 extern crate imgref;
-extern crate rgb;
 extern crate libc;
+extern crate rgb;
 use dataclients::ImageData;
 use std::error::Error;
 use std::ffi::{CStr, CString};
@@ -87,7 +87,7 @@ impl<'a> VipsImage<'a> {
         bands: i32,
     ) -> Result<VipsImage<'a>, Box<Error>> {
         let c = unsafe {
-            vips::vips_image_new_from_memory(
+            vips::vips_image_new_from_memory_copy(
                 data,
                 size,
                 width,
@@ -102,19 +102,19 @@ impl<'a> VipsImage<'a> {
     pub fn from_image_data(
         img: &ImageData,
     ) -> Result<VipsImage<'a>, Box<Error>> {
-        let byte_data: Vec<u8> =
+        let mut byte_data: Vec<u8> =
             img.pixels().fold(Vec::new(), |mut data: Vec<u8>, pixel| {
                 let rgb::RGBA { r, g, b, a } = pixel;
-                data.push(r as u8);
-                data.push(g as u8);
-                data.push(b as u8);
-                data.push(a as u8);
+                data.push((r * 255.0) as u8);
+                data.push((g * 255.0) as u8);
+                data.push((b * 255.0) as u8);
+                data.push((a * 255.0) as u8);
                 data
             });
-        let byte_data_ptr: *const c_void =
-            &byte_data as *const _ as *const c_void;
+
+        let byte_data_ptr = byte_data.as_mut_ptr() as *const c_void;
         let bands: i32 = 4; // RGBA (4 bands)
-        let size = img.buf.len() * bands as usize;
+        let size = byte_data.len() as usize;
         let width = img.width() as i32;
         let height = img.height() as i32;
 

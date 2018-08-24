@@ -43,15 +43,18 @@ fn main() {
     // println!("{:?}", val);
 
     let img = VipsImage::from_file(Path::new(a).to_str().unwrap()).unwrap();
-    let img2 = VipsImage::from_file(Path::new(b).to_str().unwrap()).unwrap();
-    // let img2 = VipsImage::from_image_data(&image_a).unwrap();
+    // let img2 = VipsImage::from_file(Path::new(b).to_str().unwrap()).unwrap();
+    let img2 = VipsImage::from_image_data(&image_a).unwrap();
 
-    img2.to_image_data();
+    // img2.to_image_data();
 
     unsafe { assert_eq!((*img.img).Xsize, (*img2.img).Xsize) };
     unsafe { assert_eq!((*img.img).Ysize, (*img2.img).Ysize) };
     unsafe { assert_eq!((*img.img).Bands, (*img2.img).Bands) };
-    unsafe { assert_eq!((*img.img).Length, (*img2.img).Length) };
+    unsafe { assert_eq!((*img.img).length, (*img2.img).length) };
+    unsafe { assert_eq!((*img.img).data, (*img2.img).data) };
+    unsafe { println!("{:?} \n\n {:?}", (*img.img), (*img2.img)) };
+    unsafe { println!("{:?} - {:?}", (*img.img).length, (*img2.img).length) };
     unsafe { assert_eq!((*img.img).Compression, (*img2.img).Compression) };
 
     println!("{:?}", img.img);
