@@ -2,6 +2,7 @@ extern crate dssim;
 extern crate optimal_image;
 
 use optimal_image::compress::*;
+use optimal_image::encoders::*;
 use optimal_image::dataclients::*;
 use optimal_image::search::*;
 use optimal_image::ImageFormat;
@@ -24,8 +25,8 @@ fn main() {
 
     let image_a = jpg_client.load(Path::new(a)).unwrap();
     let image_b = jpg_client.load(Path::new(b)).unwrap();
-    let dssim_image_a = context.create_image(&image_a).unwrap();
-    let dssim_image_b = context.create_image(&image_b).unwrap();
+    // let dssim_image_a = context.create_image(&image_a).unwrap();
+    // let dssim_image_b = context.create_image(&image_b).unwrap();
 
     // let mut search = Search::from_path(
     //     Path::new(a),
@@ -42,20 +43,25 @@ fn main() {
 
     // println!("{:?}", val);
 
-    let img = VipsImage::from_file(Path::new(a).to_str().unwrap()).unwrap();
+    // let img = VipsImage::from_file(Path::new(a).to_str().unwrap()).unwrap();
     // let img2 = VipsImage::from_file(Path::new(b).to_str().unwrap()).unwrap();
-    let img2 = VipsImage::from_image_data(&image_a).unwrap();
+    // let img2 = VipsImage::from_image_data(&image_a).unwrap();
 
     // img2.to_image_data();
 
-    unsafe { assert_eq!((*img.img).Xsize, (*img2.img).Xsize) };
-    unsafe { assert_eq!((*img.img).Ysize, (*img2.img).Ysize) };
-    unsafe { assert_eq!((*img.img).Bands, (*img2.img).Bands) };
-    unsafe { assert_eq!((*img.img).length, (*img2.img).length) };
-    unsafe { assert_eq!((*img.img).data, (*img2.img).data) };
-    unsafe { println!("{:?} \n\n {:?}", (*img.img), (*img2.img)) };
-    unsafe { println!("{:?} - {:?}", (*img.img).length, (*img2.img).length) };
-    unsafe { assert_eq!((*img.img).Compression, (*img2.img).Compression) };
+    // unsafe { assert_eq!((*img.img).Xsize, (*img2.img).Xsize) };
+    // unsafe { assert_eq!((*img.img).Ysize, (*img2.img).Ysize) };
+    // unsafe { assert_eq!((*img.img).Bands, (*img2.img).Bands) };
+    // unsafe { assert_eq!((*img.img).length, (*img2.img).length) };
+    // unsafe { assert_eq!((*img.img).data, (*img2.img).data) };
+    // unsafe { println!("{:?} \n\n {:?}", (*img.img), (*img2.img)) };
+    // unsafe { println!("{:?} - {:?}", (*img.img).length, (*img2.img).length) };
+    // unsafe { assert_eq!((*img.img).Compression, (*img2.img).Compression) };
+
+    // println!("{:?}", img.img);
+
+    let img = ImageJpegImage::from_image_data(&image_a).unwrap();
+    let img2 = ImageJpegImage::from_image_data(&image_b).unwrap();
 
     println!("{:?}", img.img);
 }
