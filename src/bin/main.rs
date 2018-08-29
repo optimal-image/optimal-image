@@ -60,9 +60,6 @@ fn main() {
 
     // println!("{:?}", img.img);
 
-
-
-
     // let img = ImageJpegImage::from_image_data(&image_a).unwrap();
     // let img2 = ImageJpegImage::from_image_data(&image_b).unwrap();
     // let img3 = img.encode(85).unwrap();

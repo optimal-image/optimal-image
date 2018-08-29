@@ -2,10 +2,10 @@ extern crate image;
 extern crate imgref;
 extern crate rgb;
 use dataclients::ImageData;
-use encoders::{FromImageData, ToImageData, Encode};
-use std::error::Error;
+use encoders::{Encode, FromImageData, ToImageData};
 use image::jpeg;
-use image::{ImageDecoder, ConvertBuffer};
+use image::{ConvertBuffer, ImageDecoder};
+use std::error::Error;
 
 pub struct ImageJpegImage {
     pub img: image::RgbaImage,
@@ -65,16 +65,28 @@ impl Encode<ImageJpegImage> for ImageJpegImage {
         let mut buffer: Vec<u8> = Vec::new();
         let img = &self.img;
         {
-            let mut encoder = jpeg::JPEGEncoder::new_with_quality(&mut buffer, quality);
-            let _ = encoder.encode(&img.clone().into_raw(), img.width(), img.height(), image::ColorType::RGBA(8));
+            let mut encoder =
+                jpeg::JPEGEncoder::new_with_quality(&mut buffer, quality);
+            let _ = encoder.encode(
+                &img.clone().into_raw(),
+                img.width(),
+                img.height(),
+                image::ColorType::RGBA(8),
+            );
         }
 
         let mut decoder = jpeg::JPEGDecoder::new(buffer.as_slice());
         let decoded = match decoder.read_image().unwrap() {
             image::DecodingResult::U8(vec) => vec,
-            _ => panic!()
+            _ => panic!(),
         };
-        let output_img: image::RgbImage = image::ImageBuffer::from_raw(img.width() as u32, img.height() as u32, decoded).unwrap();
-        Ok(ImageJpegImage{ img: output_img.convert() })
+        let output_img: image::RgbImage = image::ImageBuffer::from_raw(
+            img.width() as u32,
+            img.height() as u32,
+            decoded,
+        ).unwrap();
+        Ok(ImageJpegImage {
+            img: output_img.convert(),
+        })
     }
 }

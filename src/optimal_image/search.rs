@@ -1,10 +1,10 @@
 use dataclients::*;
-use encoders::{ImageJpegImage, FromImageData, Encode, ToImageData};
+use encoders::{Encode, FromImageData, ImageJpegImage, ToImageData};
 use image::*;
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::error::Error;
 use std::path::Path;
-use std::cmp::Ordering;
 extern crate dssim;
 use EncodingConfig;
 use ImageConfig;
@@ -85,11 +85,8 @@ impl Search {
         let result: SearchResult = configs.iter().fold(
             HashMap::new(),
             |mut result: SearchResult, (&k, v)| {
-                let optimal_config = find_optimal_config(
-                    &self,
-                    &v,
-                    self.options.threshold,
-                );
+                let optimal_config =
+                    find_optimal_config(&self, &v, self.options.threshold);
                 result.insert(k.clone(), optimal_config.clone());
                 result
             },
@@ -112,13 +109,16 @@ pub fn find_optimal_config<'a>(
     config: &'a &Vec<ImageConfig>,
     threshold: f64,
 ) -> &'a ImageConfig {
-    let image_jpeg_image = ImageJpegImage::from_image_data(&search.image_data).unwrap();
+    let image_jpeg_image =
+        ImageJpegImage::from_image_data(&search.image_data).unwrap();
     let index = config
         .binary_search_by(|probe| {
             let mut dssim_context = dssim::new();
-            let original = dssim_context.create_image(&search.image_data).unwrap();
+            let original =
+                dssim_context.create_image(&search.image_data).unwrap();
             let q = probe.encoding_config.quality;
-            let jpeg = image_jpeg_image.encode(q).unwrap().to_image_data().unwrap();
+            let jpeg =
+                image_jpeg_image.encode(q).unwrap().to_image_data().unwrap();
             let variant = dssim_context.create_image(&jpeg).unwrap();
             let (val, _) = dssim_context.compare(&original, variant);
             println!("comparing q: {} val: {}", q, val);
