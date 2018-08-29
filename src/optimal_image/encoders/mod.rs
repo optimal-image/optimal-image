@@ -11,5 +11,8 @@ pub trait ToImageData {
     fn to_image_data(&self) -> Result<ImageData, Box<Error>>;
 }
 
-pub use self::image_jpeg::ImageJpegImage;
+pub trait Encode<T> {
+    fn encode(&self, quality: u8) -> Result<T, Box<Error>>;
+}
 
+pub use self::image_jpeg::ImageJpegImage;

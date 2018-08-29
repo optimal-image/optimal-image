@@ -60,5 +60,5 @@ pub struct ImageScore {
 
 pub mod compress;
 pub mod dataclients;
-pub mod search;
 pub mod encoders;
+pub mod search;

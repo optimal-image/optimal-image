@@ -2,8 +2,8 @@ extern crate dssim;
 extern crate optimal_image;
 
 use optimal_image::compress::*;
-use optimal_image::encoders::*;
 use optimal_image::dataclients::*;
+use optimal_image::encoders::*;
 use optimal_image::search::*;
 use optimal_image::ImageFormat;
 use std::env;
@@ -28,16 +28,16 @@ fn main() {
     // let dssim_image_a = context.create_image(&image_a).unwrap();
     // let dssim_image_b = context.create_image(&image_b).unwrap();
 
-    // let mut search = Search::from_path(
-    //     Path::new(a),
-    //     SearchOptions {
-    //         threshold: 0.004,
-    //         quality_range: (70, 91),
-    //         formats: vec![ImageFormat::JPEG, ImageFormat::PNG],
-    //     },
-    // ).unwrap();
-    // search.run();
-    // println!("{:?}", search.get_result());
+    let mut search = Search::from_path(
+        Path::new(a),
+        SearchOptions {
+            threshold: 0.0014,
+            quality_range: (70, 91),
+            formats: vec![ImageFormat::JPEG],
+        },
+    ).unwrap();
+    search.run();
+    println!("{:?}", search.get_result());
 
     // let (val, _) = context.compare(&dssim_image_a, dssim_image_b);
 
@@ -60,8 +60,16 @@ fn main() {
 
     // println!("{:?}", img.img);
 
-    let img = ImageJpegImage::from_image_data(&image_a).unwrap();
-    let img2 = ImageJpegImage::from_image_data(&image_b).unwrap();
 
-    println!("{:?}", img.img);
+
+
+    // let img = ImageJpegImage::from_image_data(&image_a).unwrap();
+    // let img2 = ImageJpegImage::from_image_data(&image_b).unwrap();
+    // let img3 = img.encode(85).unwrap();
+
+    // let dssim_image_a = context.create_image(&img.to_image_data().unwrap()).unwrap();
+    // let dssim_image_b = context.create_image(&img3.to_image_data().unwrap()).unwrap();
+    // let (val, _) = context.compare(&dssim_image_a, dssim_image_b);
+
+    // println!("{:?}", val);
 }

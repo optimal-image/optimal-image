@@ -1,8 +1,10 @@
 use dataclients::*;
+use encoders::{ImageJpegImage, FromImageData, Encode, ToImageData};
 use image::*;
 use std::collections::HashMap;
 use std::error::Error;
 use std::path::Path;
+use std::cmp::Ordering;
 extern crate dssim;
 use EncodingConfig;
 use ImageConfig;
@@ -23,7 +25,6 @@ pub struct Search {
     image_data: ImageData,
     options: SearchOptions,
     result: Option<SearchResult>,
-    dssim: dssim::Dssim,
 }
 
 impl Search {
@@ -52,7 +53,6 @@ impl Search {
             image_data: original,
             options: options,
             result: None,
-            dssim: dssim::new(),
         };
 
         Ok(search)
@@ -85,11 +85,8 @@ impl Search {
         let result: SearchResult = configs.iter().fold(
             HashMap::new(),
             |mut result: SearchResult, (&k, v)| {
-                let original =
-                    self.dssim.create_image(&self.image_data).unwrap();
                 let optimal_config = find_optimal_config(
-                    &self.dssim,
-                    &original,
+                    &self,
                     &v,
                     self.options.threshold,
                 );
@@ -111,19 +108,25 @@ impl Search {
 }
 
 pub fn find_optimal_config<'a>(
-    dssim_context: &dssim::Dssim,
-    original: &dssim::DssimImage<f32>,
+    search: &Search,
     config: &'a &Vec<ImageConfig>,
     threshold: f64,
 ) -> &'a ImageConfig {
+    let image_jpeg_image = ImageJpegImage::from_image_data(&search.image_data).unwrap();
     let index = config
         .binary_search_by(|probe| {
-            // TODO:
-            // generate image with `probe` config
-            // run dssim against original
-            // e.g dssim_context.compare(original, new_image)
-            // return Ordering according to threshold
-            unimplemented!();
+            let mut dssim_context = dssim::new();
+            let original = dssim_context.create_image(&search.image_data).unwrap();
+            let q = probe.encoding_config.quality;
+            let jpeg = image_jpeg_image.encode(q).unwrap().to_image_data().unwrap();
+            let variant = dssim_context.create_image(&jpeg).unwrap();
+            let (val, _) = dssim_context.compare(&original, variant);
+            println!("comparing q: {} val: {}", q, val);
+            let diff = val - threshold;
+            if diff < 0.0 {
+                return Ordering::Greater;
+            }
+            Ordering::Equal
         })
         .unwrap();
 
