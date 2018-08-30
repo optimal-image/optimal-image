@@ -1,5 +1,6 @@
 extern crate dssim;
 extern crate rgb;
+use image::ImageError;
 use imgref::ImgVec;
 use rgb::*;
 use std::error::Error;
@@ -10,8 +11,8 @@ mod png;
 pub type ImageData = ImgVec<RGBA<f32>>;
 pub type ImageDataResult<E> = Result<ImageData, E>;
 
-pub trait Loader<E: Error> {
-    fn load<P: AsRef<Path>>(&self, path: P) -> ImageDataResult<E>;
+pub trait Loader {
+    fn load<P: AsRef<Path>>(&self, path: P) -> ImageDataResult<ImageError>;
 }
 
 pub use self::jpeg::Jpeg;

@@ -1,10 +1,14 @@
+extern crate image;
+extern crate imgref;
+extern crate libc;
+extern crate rgb;
+use dataclients::ImageData;
 use std::error::Error;
 use std::ffi::{CStr, CString};
 use std::marker::PhantomData;
-use std::os::raw::{c_char, c_int, c_void};
+use std::os::raw::{c_char, c_void};
 use std::ptr::null;
-use std::sync::atomic::AtomicBool;
-use std::sync::atomic::Ordering::Relaxed;
+use std::slice;
 use vips;
 
 const NULL_LIST: *const c_char = null() as *const c_char;
@@ -32,8 +36,18 @@ impl<'a> VipsImage<'a> {
         path: S,
     ) -> Result<VipsImage<'a>, Box<Error>> {
         let path = CString::new(path)?;
-        let c =
-            unsafe { vips::vips_image_new_from_file(path.as_ptr(), NULL_LIST) };
+        let c = unsafe {
+            let mut out: *mut *mut vips::VipsImage =
+                vips::vips_image_new() as *mut *mut vips::VipsImage;
+            let rgb_image =
+                vips::vips_image_new_from_file(path.as_ptr(), NULL_LIST);
+            // new_from_file can return RGB image, we have to add alpha in order
+            // to be sure to have an RGBA image
+            vips::vips_addalpha(rgb_image, out);
+            // as we are using a native VipsImage we need to manually deref it
+            vips::g_object_unref(rgb_image as *mut c_void);
+            *(out)
+        };
         result(c)
     }
 
@@ -54,6 +68,89 @@ impl<'a> VipsImage<'a> {
             0 => Ok(()),
             _ => Err(current_error().into()),
         }
+    }
+
+    pub fn from_buffer(
+        buf: *const c_void,
+        len: usize,
+    ) -> Result<VipsImage<'a>, Box<Error>> {
+        let c =
+            unsafe { vips::vips_image_new_from_buffer(buf, len, NULL_LIST) };
+        result(c)
+    }
+
+    pub fn from_memory(
+        data: *const c_void,
+        size: usize,
+        width: i32,
+        height: i32,
+        bands: i32,
+    ) -> Result<VipsImage<'a>, Box<Error>> {
+        let c = unsafe {
+            vips::vips_image_new_from_memory_copy(
+                data,
+                size,
+                width,
+                height,
+                bands,
+                vips::VipsBandFormat::VIPS_FORMAT_UCHAR,
+            )
+        };
+        result(c)
+    }
+
+    pub fn from_image_data(
+        img: &ImageData,
+    ) -> Result<VipsImage<'a>, Box<Error>> {
+        let mut byte_data: Vec<u8> =
+            img.pixels().fold(Vec::new(), |mut data: Vec<u8>, pixel| {
+                let rgb::RGBA { r, g, b, a } = pixel;
+                data.push((r * 255.0) as u8);
+                data.push((g * 255.0) as u8);
+                data.push((b * 255.0) as u8);
+                data.push((a * 255.0) as u8);
+                data
+            });
+
+        let byte_data_ptr = byte_data.as_mut_ptr() as *const c_void;
+        let bands: i32 = 4; // RGBA (4 bands)
+        let size = byte_data.len() as usize;
+        let width = img.width() as i32;
+        let height = img.height() as i32;
+
+        let c =
+            VipsImage::from_memory(byte_data_ptr, size, width, height, bands)?;
+        result(c.img)
+    }
+
+    pub fn to_image_data(&self) -> Result<ImageData, Box<Error>> {
+        let vector: Vec<u8> = unsafe {
+            let mut result_size: usize = 0;
+            let memory: *mut u8 = vips::vips_image_write_to_memory(
+                self.img,
+                &mut result_size as *mut usize,
+            ) as *mut u8;
+            let slice = slice::from_raw_parts_mut(memory, result_size);
+            let vec = slice.to_vec();
+            // manually free the memory
+            libc::free(memory as *mut libc::c_void);
+            vec
+        };
+
+        // let buffer: ImageData = vector.chunks(4).map(|chunk| {
+        //     chunk.iter().fold(RGBA {}, |pixel, byte| {
+        //         b
+        //     })
+        // }).collect();
+
+        let width = unsafe { (*self.img).Xsize };
+        let height = unsafe { (*self.img).Ysize };
+
+        // unsafe { println!("{:?}", buffer) };
+
+        unimplemented!();
+
+        // Ok(imgref::Img::new(buffer, width as usize, height as usize))
     }
 
     /// `jpegsave()` saves a `jpeg` image with a given `quality` factor
