@@ -9,7 +9,6 @@ use std::path::Path;
 fn main() {
     let args: Vec<String> = env::args().collect();
     let image_path = &args.get(1).unwrap();
-    
     let mut search = Search::from_path(
         Path::new(image_path),
         SearchOptions {
