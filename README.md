@@ -9,7 +9,22 @@
 ```bash
 cargo run
 ```
-- Now you can verify the tool  by comparing 2 images (source http://www.gaeawiki.com/) as below:
+
+## Usage
 ```
-./target/optimal_image data/Iceland_scenery.png data/Iceland_scenery-min.png
+Optimal Image 0.2.0
+Determine optimal compression settings for an image
+USAGE:
+    optimal_image <original> --range <MIN> <MAX> --threshold <threshold> [SUBCOMMAND]
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+OPTIONS:
+    -r, --range <MIN> <MAX>        Compression range to search (e.g. --range min max)
+    -t, --threshold <threshold>    threshold difference from original (lower is better)
+ARGS:
+    <original>
+SUBCOMMANDS:
+    diff    Calculate DSSIM difference between 2 images
+    help    Prints this message or the help of the given subcommand(s)
 ```
