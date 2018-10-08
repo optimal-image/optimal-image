@@ -1,10 +1,15 @@
-sudo: required
+sudo: false
 language: rust
 cache: cargo
 
 env:
   global:
-    - VIPS_VERSION=8.6.5
+    - PATH=$HOME/.cargo/bin:$PATH
+
+addons:
+  apt:
+    packages:
+      - libvips-dev
 
 rust:
   - stable
@@ -14,9 +19,6 @@ rust:
 stages:
   - lint
   - test
-
-before_script:
-  - ./install-vips.sh
 
 script:
   - cargo test --verbose
