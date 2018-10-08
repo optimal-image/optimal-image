@@ -1,6 +1,9 @@
 sudo: required
 language: rust
-cache: cargo
+cache:
+  cargo: true
+  directories:
+    - vips-8.6.5
 
 env:
   global:
