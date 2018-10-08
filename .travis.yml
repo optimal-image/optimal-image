@@ -1,13 +1,32 @@
 sudo: required
 language: rust
-cache:
-  cargo: true
-  directories:
-    - vips-8.6.5
 
 env:
   global:
     - VIPS_VERSION=8.6.5
+    - LD_LIBRARY_PATH=$HOME/vips/lib:$LD_LIBRARY_PATH
+    - PKG_CONFIG_PATH=$HOME/vips/lib/pkgconfig:$PKG_CONFIG_PATH
+    - PATH=$HOME/.cargo/bin:$HOME/vips/bin:$PATH
+
+addons:
+  apt:
+    packages:
+      - ca-certificates
+      - wget
+      - build-essential
+      - glib2.0-dev
+      - libxml2-dev
+      - libjpeg-turbo8-dev
+      - libexif-dev
+      - libtiff5-dev
+      - libgsf-1-dev
+      - libpng-dev
+      - libexpat-dev
+
+cache:
+  cargo: true
+  directories:
+    - $HOME/vips
 
 rust:
   - stable
@@ -19,7 +38,7 @@ stages:
   - test
 
 before_script:
-  - pkg-config --exists vips || ./install-vips.sh
+  - ./ci/install-vips.sh
 
 script:
   - cargo test --verbose
