@@ -16,7 +16,7 @@ stages:
   - test
 
 before_script:
-  - ./install-vips.sh
+  - pkg-config --exists vips || ./install-vips.sh
 
 script:
   - cargo test --verbose
