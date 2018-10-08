@@ -89,7 +89,8 @@ fn main() {
             quality_range: (min, max),
             formats: vec![ImageFormat::JPEG],
         },
-    ).unwrap();
+    )
+    .unwrap();
     search.run();
 
     println!("Optimal Config: {:?}", search.get_result());
