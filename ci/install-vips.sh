@@ -23,7 +23,7 @@ mkdir $HOME/vips
 
 curl -L ${tarball} | tar xz
 cd vips-${version}
-CXXFLAGS=-D_GLIBCXX_USE_CXX11_ABI=0 ./configure \
+./configure \
     --prefix="$HOME/vips" \
     --disable-debug \
     --disable-static \
