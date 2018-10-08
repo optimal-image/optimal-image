@@ -2,9 +2,6 @@ sudo: required
 language: rust
 cache: cargo
 
-before_install:
-  - ./install-vips.sh
-
 env:
   global:
     - VIPS_VERSION=8.6.5
@@ -12,14 +9,31 @@ env:
 rust:
   - stable
   - beta
-  
-matrix:
-  allow_failures:
-    - rust: beta
-  fast_finish: true
+  - nightly
+
+stages:
+  - lint
+  - test
+
+before_script:
+  - ./install-vips.sh
 
 script:
-- rustup component add rustfmt-preview
-- cargo fmt --all -- --check
-- cargo test --verbose
-- cargo doc
+  - cargo test --verbose
+  - cargo doc
+
+jobs:
+  include:
+    - stage: lint
+      rust: nightly
+      script:
+        - export PATH="$PATH:~/.cargo/bin"
+        - cargo +nightly fmt -- --version || cargo +nightly install rustfmt-nightly --force
+        - cargo +nightly fmt --all -- --check
+
+matrix:
+  allow_failures:
+    - rust: nightly
+      stage: test
+    - rust: beta
+  fast_finish: true
