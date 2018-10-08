@@ -1,16 +1,39 @@
 # optimal-image
+
 [![Build Status](https://travis-ci.org/optimal-image/optimal-image.svg?branch=master)](https://travis-ci.com/optimal-image/optimal-image)
 
-
 ## Development
-- For the first time you want to run, you can run the `make init` to intialize the `githooks`
 
+### Dependencies
+
+This project depends on the following,
+
+- [libvips](https://github.com/libvips/libvips)
+- [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)
+
+On Mac, install them using,
+
+```sh
+brew install pkg-config libvips
+```
+
+On Ubuntu / Alpine, install them using,
+
+```sh
+./install-vips.sh
+```
+
+### Build
+
+- For the first time you want to run, you can run the `make init` to intialize the `githooks`
 - Once you have `cargo` available locally, build the package as
+
 ```bash
 cargo run
 ```
 
 ## Usage
+
 ```
 Optimal Image 0.2.0
 Determine optimal compression settings for an image
