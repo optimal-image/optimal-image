@@ -2,6 +2,7 @@
 
 readonly VIPS_VERSION="8.6.5"
 readonly VIPS_SOURCE="https://github.com/jcupitt/libvips/archive"
+readonly VIPS_DIR=libvips-${VIPS_VERSION}
 
 readonly IS_UBUNTU=$(cat /etc/*-release | grep -o -m 1 ubuntu)
 readonly IS_ALPINE=$(cat /etc/*-release | grep -o -m 1 alpine)
@@ -19,9 +20,8 @@ function install_on_alpine {
     libgsf-dev \
     libpng-dev \
     expat-dev \
-  && wget -O "vips-${VIPS_VERSION}.tar.gz" ${VIPS_SOURCE}/v${VIPS_VERSION}.tar.gz \
-  && tar -zxf vips-${VIPS_VERSION}.tar.gz \
-  && cd vips-${VIPS_VERSION}/ \
+  && wget "${VIPS_SOURCE}/v${VIPS_VERSION}.tar.gz" -O - | tar -zx \
+  && cd ${VIPS_DIR}/ \
   && ./configure \
     --prefix=/usr \
     --disable-debug \
@@ -35,8 +35,7 @@ function install_on_alpine {
   && make -s \
   && make install \
   && cd ../ \
-  && rm -rf vips-${VIPS_VERSION}/ \
-  && rm vips-${VIPS_VERSION}.tar.gz
+  && rm -rf ${VIPS_DIR}/
 }
 
 function install_on_ubuntu {
@@ -53,9 +52,8 @@ function install_on_ubuntu {
     libgsf-1-dev \
     libpng-dev \
     libexpat-dev \
-  && wget -O "vips-${VIPS_VERSION}.tar.gz" ${VIPS_SOURCE}/v${VIPS_VERSION}.tar.gz \
-  && tar -zxf vips-${VIPS_VERSION}.tar.gz \
-  && cd vips-${VIPS_VERSION}/ \
+  && wget "${VIPS_SOURCE}/v${VIPS_VERSION}.tar.gz" -O - | tar -zx \
+  && cd ${VIPS_DIR}/ \
   && ./configure \
     --prefix=/usr \
     --disable-debug \
@@ -69,8 +67,7 @@ function install_on_ubuntu {
   && make -s \
   && sudo make install \
   && cd ../ \
-  && rm -rf vips-${VIPS_VERSION}/ \
-  && rm vips-${VIPS_VERSION}.tar.gz
+  && rm -rf ${VIPS_DIR}/
 }
 
 if [[ ! -z "$IS_UBUNTU" ]]; then
