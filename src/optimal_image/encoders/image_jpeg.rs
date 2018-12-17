@@ -27,7 +27,8 @@ impl FromImageData<ImageJpegImage> for ImageJpegImage {
             img.width() as u32,
             img.height() as u32,
             byte_data,
-        ).unwrap();
+        )
+        .unwrap();
 
         Ok(ImageJpegImage { img: img })
     }
@@ -84,7 +85,8 @@ impl Encode<ImageJpegImage> for ImageJpegImage {
             img.width() as u32,
             img.height() as u32,
             decoded,
-        ).unwrap();
+        )
+        .unwrap();
         Ok(ImageJpegImage {
             img: output_img.convert(),
         })

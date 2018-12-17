@@ -1,15 +1,53 @@
 # optimal-image
+
 [![Build Status](https://travis-ci.org/optimal-image/optimal-image.svg?branch=master)](https://travis-ci.com/optimal-image/optimal-image)
 
-
 ## Development
-- For the first time you want to run, you can run the `make init` to intialize the `githooks`
 
+### Dependencies
+
+This project depends on the following,
+
+- [libvips](https://github.com/libvips/libvips)
+- [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)
+
+On Mac, install them using,
+
+```sh
+brew install pkg-config libvips
+```
+
+On Ubuntu / Alpine, install them using,
+
+```sh
+./install-vips.sh
+```
+
+### Build
+
+- For the first time you want to run, you can run the `make init` to intialize the `githooks`
 - Once you have `cargo` available locally, build the package as
+
 ```bash
 cargo run
 ```
-- Now you can verify the tool  by comparing 2 images (source http://www.gaeawiki.com/) as below:
+
+## Usage
+
 ```
-./target/optimal_image data/Iceland_scenery.png data/Iceland_scenery-min.png
+Optimal Image 0.2.0
+Determine optimal compression settings for an image
+USAGE:
+    optimal_image <original> --range <MIN> <MAX> --threshold <threshold> [SUBCOMMAND]
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+OPTIONS:
+    -r, --range <MIN> <MAX>        Compression range to search (e.g. --range min max)
+    -t, --threshold <threshold>    threshold difference from original (lower is better)
+ARGS:
+    <original>
+SUBCOMMANDS:
+    diff    Calculate DSSIM difference between 2 images
+    help    Prints this message or the help of the given subcommand(s)
 ```
