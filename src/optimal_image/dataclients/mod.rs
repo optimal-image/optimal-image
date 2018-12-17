@@ -15,5 +15,9 @@ pub trait Loader {
     fn load<P: AsRef<Path>>(&self, path: P) -> ImageDataResult<ImageError>;
 }
 
+pub trait MemoryLoader {
+    fn load_from_memory(&self, buffer: &Vec<u8>) -> ImageDataResult<ImageError>;
+}
+
 pub use self::jpeg::Jpeg;
 pub use self::png::Png;

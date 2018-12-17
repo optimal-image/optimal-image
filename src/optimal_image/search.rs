@@ -28,6 +28,23 @@ pub struct Search {
 }
 
 impl Search {
+    pub fn from_buffer(
+        path: String,
+        buf: &Vec<u8>,
+        options: SearchOptions,
+    ) -> Result<Search, Box<Error>> {
+        let dataclient = Jpeg::new();
+
+        let search = Search {
+            path: path,
+            image_data: dataclient.load_from_memory(&buf)?,
+            options: options,
+            result: None,
+        };
+
+        Ok(search)
+    }
+
     pub fn from_path(
         path: &Path,
         options: SearchOptions,
@@ -128,7 +145,8 @@ pub fn find_optimal_config<'a>(
             }
             Ordering::Equal
         })
-        .unwrap();
+        // fallback to lowest quality when threshold is too high
+        .unwrap_or(0);
 
     &config[index]
 }
