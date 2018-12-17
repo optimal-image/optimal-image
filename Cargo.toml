@@ -2,6 +2,8 @@
 name = "optimal-image"
 version = "0.3.0"
 authors = ["Andrea Moretti <axyzxp@gmail.com>"]
+description = "Find optimal compression level for images based on DSSIM similarity"
+license = "MIT"
 
 [badges]
 travis-ci = { repository = "https://github.com/axyz/optimal-image", branch = "master" }
