@@ -17,8 +17,8 @@ pub enum ImageFormat {
 
 #[derive(Debug, Clone)]
 pub struct EncodingConfig {
-    format: ImageFormat,
-    quality: u8,
+    pub format: ImageFormat,
+    pub quality: u8,
 }
 
 impl PartialOrd for EncodingConfig {
@@ -35,8 +35,8 @@ impl PartialEq for EncodingConfig {
 
 #[derive(Debug, Clone)]
 pub struct ImageConfig {
-    id: String,
-    encoding_config: EncodingConfig,
+    pub id: String,
+    pub encoding_config: EncodingConfig,
 }
 
 impl PartialOrd for ImageConfig {
