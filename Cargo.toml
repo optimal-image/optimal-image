@@ -1,6 +1,6 @@
 [package]
 name = "optimal-image"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Andrea Moretti <axyzxp@gmail.com>"]
 description = "Find optimal compression level for images based on DSSIM similarity"
 license = "MIT"
@@ -17,6 +17,8 @@ rgb = "0.8.11"
 lodepng = "2.1.2"
 vips-sys = "0.1.2"
 libc = "0.2.43"
+serde = "1.0.82"
+serde_derive = "1.0.82"
 
 [[bin]]
 name = "optimal-image"

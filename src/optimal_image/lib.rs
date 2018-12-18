@@ -5,9 +5,12 @@ extern crate lodepng;
 extern crate rgb;
 extern crate vips_sys as vips;
 
+#[macro_use]
+extern crate serde_derive;
+
 use std::cmp::Ordering;
 
-#[derive(Eq, PartialEq, Debug, Clone, Hash)]
+#[derive(Eq, PartialEq, Debug, Clone, Hash, Serialize)]
 pub enum ImageFormat {
     JPEG,
     PNG,
@@ -15,7 +18,7 @@ pub enum ImageFormat {
     JPEGXR,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct EncodingConfig {
     pub format: ImageFormat,
     pub quality: u8,
@@ -33,7 +36,7 @@ impl PartialEq for EncodingConfig {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct ImageConfig {
     pub id: String,
     pub encoding_config: EncodingConfig,
